@@ -1,5 +1,18 @@
 package com.denser.june.presentation.components
-
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.glass.GlassStyle
+import dev.chrisbanes.haze.hazeGlass
+import dev.chrisbanes.haze.hazeSource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -54,15 +67,33 @@ fun JuneFloatingAction(
     disabledContainerColor: Color = Color.Transparent,
     disabledContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
 ) {
-    ExtendedFloatingActionButton(
-        onClick = { if (enabled) onClick() },
-        expanded = true,
-        icon = { icon?.invoke() },
-        text = { Text(label, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        containerColor = if (enabled) containerColor else disabledContainerColor,
-        contentColor = if (enabled) contentColor else disabledContentColor,
-        shape = CircleShape,
-        modifier = modifier.height(40.dp),
-        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-    )
+    val hazeState = remember { HazeState() }
+Box(modifier = modifier.hazeSource(state = hazeState)) {
+    Box(
+        modifier = Modifier
+            .hazeGlass(
+                input = HazeInput.Sources(hazeState),
+                style = GlassStyle.regular.then {
+                    shape(CircleShape)
+                    tint(Color.White.copy(alpha = 0.16f))
+                }
+            )
+            .clickable(enabled = enabled) { onClick() }
+            .height(40.dp)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            icon?.invoke()
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = if (enabled) contentColor else disabledContentColor
+            )
+        }
+    }
+}
 }
