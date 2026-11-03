@@ -202,6 +202,8 @@ configurations.all {
 
 dependencies {
     // Core
+    implementation("dev.chrisbanes.haze:haze:2.0.0-beta02")
+    implementation("dev.chrisbanes.haze:haze-glass:2.0.0-beta02")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
